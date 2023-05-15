@@ -4,13 +4,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Animator m_animator;
-    [SerializeField] SpriteRenderer m_spriteRenderer;
-    [SerializeField] float m_speed = 10;
+    [SerializeField]
+    Animator m_animator;
+    [SerializeField]
+    SpriteRenderer m_spriteRenderer;
+    [SerializeField]
+    float m_speed = 10;
+
     Rigidbody2D m_rigidbody2D;
+    BoxCollider2D m_boxCollider2D;
     Vector3 m_dir;
 
+    [SerializeField]
+    GameObject m_bulletPrefab;
+    [SerializeField]
+    Transform m_firePos;
+
+#if UNITY_EDITOR
     public int HP { get; set; }
+#else
+    public int HP;
+#endif
     private void Awake()
     {
         Debug.Log("플레이어 인스턴스 완료!");
@@ -28,6 +42,7 @@ public class PlayerController : MonoBehaviour
         m_animator = gameObject.GetComponent<Animator>();
         m_spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         m_rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
+        m_boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
     }
     private void FixedUpdate()
     {
@@ -40,7 +55,6 @@ public class PlayerController : MonoBehaviour
         ActionControl();
     }
 
-    
     void ActionControl()
     {
         //if (Input.GetKeyDown(KeyCode.C))
@@ -51,37 +65,66 @@ public class PlayerController : MonoBehaviour
         //        obj.transform.position = new Vector3(Random.Range(-9f, 9f), Random.Range(-5f, 5f));
         //    }
         //}
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))    //공격
         {
             m_animator.SetBool("IsFire", true);
+            CreateBullet();
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             m_animator.SetBool("IsFire", false);
         }
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
+
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))    //Idle
         {
             m_animator.SetBool("IsMove", false);
             m_dir = Vector3.zero;
         }
-        if (Input.GetKey(KeyCode.LeftArrow))
+
+
+        if (Input.GetKey(KeyCode.LeftArrow))    //왼쪽 이동
         {
             //gameObject.transform.position += Vector3.left * 0.01f;
             m_dir = Vector3.left;
             m_animator.SetBool("IsMove", true);
-            m_spriteRenderer.flipX = false;
+            //m_spriteRenderer.flipX = false;
+            //gameObject.transform.rotation = Quaternion.identity; //Quaternion.Euler(0f, 0f, 0f);
+            gameObject.transform.eulerAngles = Vector3.zero;
+
+            Vector2 playerOffset = m_boxCollider2D.offset;
+            if (playerOffset.x < 0)     //왼쪽이동 시 boxCollider.offset 오른쪽으로 변경
+            {
+                playerOffset.x *= -1;
+                m_boxCollider2D.offset = playerOffset;
+            }
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))      //오른쪽 이동
         {
             //gameObject.transform.position += Vector3.right * 0.01f;
             m_dir = Vector3.right;
             m_animator.SetBool("IsMove", true);
-            m_spriteRenderer.flipX = true;
+            //m_spriteRenderer.flipX = true;
+            //gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            gameObject.transform.eulerAngles = new Vector3(0f, 180f, 0);
+
+            Vector2 playerOffset = m_boxCollider2D.offset;
+            if (playerOffset.x > 0)     //왼쪽이동 시 boxCollider.offset 왼쪽 변경
+            {
+                playerOffset.x *= -1;
+                m_boxCollider2D.offset = playerOffset;
+            }
         }
         var stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
-        if (!stateInfo.IsName("Fire"))
+        if (!stateInfo.IsName("Fire"))  //공격중이 아닐 경우 이동
         {
             gameObject.transform.position += m_dir * m_speed * Time.deltaTime;
         }
+    }
+
+    void CreateBullet()
+    {
+        var obj = Instantiate(m_bulletPrefab);
+        obj.transform.position = m_firePos.position;
+        
     }
 }

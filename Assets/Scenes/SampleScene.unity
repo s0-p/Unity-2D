@@ -333,7 +333,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474024622}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3.358251, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -354,6 +354,7 @@ MonoBehaviour:
   m_animator: {fileID: 0}
   m_spriteRenderer: {fileID: 0}
   m_speed: 10
+  m_bulletPrefab: {fileID: 7989434401869740560, guid: 9995487c3860840449b562aacdadd41b, type: 3}
 --- !u!61 &474024627
 BoxCollider2D:
   m_ObjectHideFlags: 0
