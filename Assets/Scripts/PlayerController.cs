@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
         m_rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
         m_boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
     }
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         //m_rigidbody2D.velocity += (Vector2) m_dir * m_speed * Time.deltaTime;
     }
@@ -53,8 +53,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         ActionControl();
-    }
 
+    }
     void ActionControl()
     {
         //if (Input.GetKeyDown(KeyCode.C))
@@ -89,14 +89,7 @@ public class PlayerController : MonoBehaviour
             m_animator.SetBool("IsMove", true);
             //m_spriteRenderer.flipX = false;
             //gameObject.transform.rotation = Quaternion.identity; //Quaternion.Euler(0f, 0f, 0f);
-            gameObject.transform.eulerAngles = Vector3.zero;
-
-            Vector2 playerOffset = m_boxCollider2D.offset;
-            if (playerOffset.x < 0)     //왼쪽이동 시 boxCollider.offset 오른쪽으로 변경
-            {
-                playerOffset.x *= -1;
-                m_boxCollider2D.offset = playerOffset;
-            }
+            transform.eulerAngles = Vector3.zero;
         }
         if (Input.GetKey(KeyCode.RightArrow))      //오른쪽 이동
         {
@@ -105,26 +98,19 @@ public class PlayerController : MonoBehaviour
             m_animator.SetBool("IsMove", true);
             //m_spriteRenderer.flipX = true;
             //gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-            gameObject.transform.eulerAngles = new Vector3(0f, 180f, 0);
-
-            Vector2 playerOffset = m_boxCollider2D.offset;
-            if (playerOffset.x > 0)     //왼쪽이동 시 boxCollider.offset 왼쪽 변경
-            {
-                playerOffset.x *= -1;
-                m_boxCollider2D.offset = playerOffset;
-            }
+            transform.eulerAngles = new Vector3(0f, 180f, 0);
         }
         var stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
         if (!stateInfo.IsName("Fire"))  //공격중이 아닐 경우 이동
         {
-            gameObject.transform.position += m_dir * m_speed * Time.deltaTime;
+            transform.position += m_dir * m_speed * Time.deltaTime;
         }
     }
 
     void CreateBullet()
     {
         var obj = Instantiate(m_bulletPrefab);
-        obj.transform.position = m_firePos.position;
-        
+        var bullet = obj.GetComponent<BulletController>();
+        bullet.SetBullet(m_firePos.position, transform.eulerAngles.y == 180 ? Vector3.right : Vector3.left);
     }
 }
