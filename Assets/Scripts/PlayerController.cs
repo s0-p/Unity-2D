@@ -7,18 +7,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Animator m_animator;
     [SerializeField]
-    SpriteRenderer m_spriteRenderer;
+    float m_speed = 10f;
     [SerializeField]
-    float m_speed = 10;
-
-    Rigidbody2D m_rigidbody2D;
-    BoxCollider2D m_boxCollider2D;
+    float m_jumpPower = 10f;
+    Rigidbody2D m_rigidbody;
+    BoxCollider2D m_boxCollider;
     Vector3 m_dir;
 
     [SerializeField]
     GameObject m_bulletPrefab;
     [SerializeField]
     Transform m_firePos;
+
+    bool IsGrounded { get; set; }
+    //bool m_IsFalling;
 
 #if UNITY_EDITOR
     public int HP { get; set; }
@@ -33,28 +35,26 @@ public class PlayerController : MonoBehaviour
     {
         HP = 100;
         Debug.Log("플레이어 현재 체력 : " + HP);
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
         m_animator = GetComponent<Animator>();
-        m_spriteRenderer = GetComponent<SpriteRenderer>();
-        m_rigidbody2D = GetComponent<Rigidbody2D>();
-        m_boxCollider2D = GetComponent<BoxCollider2D>();
+        m_rigidbody = GetComponent<Rigidbody2D>();
+        m_boxCollider = GetComponent<BoxCollider2D>();
     }
     void FixedUpdate()
     {
-        //m_rigidbody2D.velocity += (Vector2) m_dir * m_speed * Time.deltaTime;
+        m_rigidbody.velocity += (Vector2)m_dir * m_speed * Time.deltaTime;
     }
 
     // Update is called once per frame
     void Update()
     {
         ActionControl();
-
     }
+    
     void ActionControl()
     {
         //if (Input.GetKeyDown(KeyCode.C))
@@ -65,24 +65,13 @@ public class PlayerController : MonoBehaviour
         //        obj.transform.position = new Vector3(Random.Range(-9f, 9f), Random.Range(-5f, 5f));
         //    }
         //}
-        if (Input.GetKeyDown(KeyCode.Space))    //공격
-        {
-            m_animator.SetBool("IsFire", true);
-            //CreateBullet();
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            m_animator.SetBool("IsFire", false);
-        }
 
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))    //Idle
         {
             m_animator.SetBool("IsMove", false);
             m_dir = Vector3.zero;
         }
-
-
-        if (Input.GetKey(KeyCode.LeftArrow))    //왼쪽 이동
+        if (Input.GetKey(KeyCode.LeftArrow))    //left walk
         {
             //gameObject.transform.position += Vector3.left * 0.01f;
             m_dir = Vector3.left;
@@ -91,7 +80,7 @@ public class PlayerController : MonoBehaviour
             //gameObject.transform.rotation = Quaternion.identity; //Quaternion.Euler(0f, 0f, 0f);
             transform.eulerAngles = Vector3.zero;
         }
-        if (Input.GetKey(KeyCode.RightArrow))      //오른쪽 이동
+        if (Input.GetKey(KeyCode.RightArrow))      //right walk
         {
             //gameObject.transform.position += Vector3.right * 0.01f;
             m_dir = Vector3.right;
@@ -100,10 +89,54 @@ public class PlayerController : MonoBehaviour
             //gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             transform.eulerAngles = new Vector3(0f, 180f, 0);
         }
-        var stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
-        if (!stateInfo.IsName("Fire"))  //공격중이 아닐 경우 이동
+        //var stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
+        //if (!stateInfo.IsName("Fire"))  //공격중이 아닐 경우 이동
+        //{
+        //    transform.position += m_dir * m_speed * Time.deltaTime;
+        //}
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))    //Fire
         {
-            transform.position += m_dir * m_speed * Time.deltaTime;
+            m_animator.SetBool("IsFire", true);
+            //CreateBullet();
+        }
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            m_animator.SetBool("IsFire", false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))    //JumpUp
+        {
+            m_animator.SetInteger("JumpState", 1);
+            m_rigidbody.AddForce(Vector2.up * m_jumpPower, ForceMode2D.Impulse);
+        }
+        if (!IsGrounded)    //JumpDown
+        {
+            if (m_rigidbody.velocity.y < 0)
+            {
+                m_animator.SetInteger("JumpState", 2);
+                //if (!m_IsFalling)
+                //{
+                //    //m_IsFalling = true;
+                //    m_animator.SetInteger("JumpState", 2);
+                //}
+            }
+        }
+    }
+    void OnTriggerExit2D(Collider2D collision)      //JumpUp
+    {
+        if (collision.CompareTag("Background"))
+        {
+            IsGrounded = false;
+        }
+    }
+    void OnTriggerEnter2D(Collider2D collision)     //JumpDown
+    {
+        if (collision.CompareTag("Background"))
+        {
+            //m_IsFalling = false;
+            IsGrounded = true;
+            m_animator.SetInteger("JumpState", 0);
         }
     }
 
