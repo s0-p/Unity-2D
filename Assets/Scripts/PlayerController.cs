@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))    //АјАн
         {
             m_animator.SetBool("IsFire", true);
-            CreateBullet();
+            //CreateBullet();
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {

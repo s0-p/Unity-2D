@@ -22,7 +22,7 @@ AnimationClip:
     - time: 0
       value: {fileID: 8871532568298537163, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - time: 0.083333336
-      value: {fileID: -3522477055284954234, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
+      value: {fileID: 8871532568298537163, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - time: 0.16666667
       value: {fileID: -2611168455720188827, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - time: 0.25
@@ -61,7 +61,7 @@ AnimationClip:
       isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: 8871532568298537163, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
-    - {fileID: -3522477055284954234, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
+    - {fileID: 8871532568298537163, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - {fileID: -2611168455720188827, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - {fileID: -747095956079510842, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
     - {fileID: -1150986314314233284, guid: f732de21c9b52954c9aa948c61c43a0c, type: 3}
@@ -95,4 +95,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.33333334
+    functionName: CreateBullet
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
