@@ -12,7 +12,7 @@ public class BulletController : MonoBehaviour
     float m_speed = 10f;
     Vector3 m_dir = Vector3.left;
     //float m_time;
-    float m_duratuion = 1.5f;
+    //float m_duratuion = 1.5f;
 
     void Awake()
     {
@@ -44,22 +44,45 @@ public class BulletController : MonoBehaviour
         {
             RemoveBullet();
         }
-        //transform.position += m_dir * m_speed * Time.deltaTime;
+        transform.position += m_dir * m_speed * Time.deltaTime;
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Background"))
+        {
+            RemoveBullet();
+        }
+    }
+    //private void OnCollisionExit2D(Collision2D collision) {}
+    //private void OnCollisionStay(Collision collision) {}
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Background"))
+        {
+            RemoveBullet();
+        }
+        else if (collision.CompareTag("Enemy"))
+        {
+            var enemy = collision.gameObject.GetComponent<EnemyController>();
+            enemy.SetDamage(1);
+            RemoveBullet();
+        }
     }
 
     //void OnBecameInvisible()  //카메라에서 안보이면 삭제
     //{
     //    Destroy(gameObject);
     //}
-    void RemoveBullet()
-    {
-        Destroy(gameObject);
-    }
     public void SetBullet(Vector3 pos, Vector3 dir)
     {
         transform.position = pos;
         m_dir = dir;
         m_rigidbody.AddForce(m_dir * m_speed, ForceMode2D.Impulse);
         //Invoke("RemoveBullet", m_duratuion);    //시간 기준으로 bullet 삭제
+    }
+    void RemoveBullet()
+    {
+        Destroy(gameObject);
     }
 }

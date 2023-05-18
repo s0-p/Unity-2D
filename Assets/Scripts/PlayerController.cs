@@ -39,10 +39,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_animator = gameObject.GetComponent<Animator>();
-        m_spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        m_rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-        m_boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
+        m_animator = GetComponent<Animator>();
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
+        m_rigidbody2D = GetComponent<Rigidbody2D>();
+        m_boxCollider2D = GetComponent<BoxCollider2D>();
     }
     void FixedUpdate()
     {
