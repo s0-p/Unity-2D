@@ -24,11 +24,10 @@ public class BulletController : MonoBehaviour
         m_mainCamera = Camera.main;
         m_rigidbody = GetComponent<Rigidbody2D>();
     }
-
     // Start is called before the first frame update
-    void Start()
-    {
-    }
+    //void Start()
+    //{
+    //}
 
     // Update is called once per frame
     void Update()
@@ -46,16 +45,30 @@ public class BulletController : MonoBehaviour
         }
         transform.position += m_dir * m_speed * Time.deltaTime;
     }
-    void OnCollisionEnter2D(Collision2D collision)
+    public void SetBullet(Vector3 pos, Vector3 dir)
     {
-        if (collision.collider.CompareTag("Background"))
-        {
-            RemoveBullet();
-        }
+        transform.position = pos;
+        m_dir = dir;
+        m_rigidbody.AddForce(m_dir * m_speed, ForceMode2D.Impulse);
+        //Invoke("RemoveBullet", m_duratuion);    //시간 기준으로 bullet 삭제
     }
+    void RemoveBullet()
+    {
+        Destroy(gameObject);
+    }
+    //void OnBecameInvisible()  //카메라에서 안보이면 삭제
+    //{
+    //    Destroy(gameObject);
+    //}
+    //void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.collider.CompareTag("Background"))
+    //    {
+    //        RemoveBullet();
+    //    }
+    //}
     //private void OnCollisionExit2D(Collision2D collision) {}
     //private void OnCollisionStay(Collision collision) {}
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Background"))
@@ -68,21 +81,5 @@ public class BulletController : MonoBehaviour
             enemy.SetDamage(1);
             RemoveBullet();
         }
-    }
-
-    //void OnBecameInvisible()  //카메라에서 안보이면 삭제
-    //{
-    //    Destroy(gameObject);
-    //}
-    public void SetBullet(Vector3 pos, Vector3 dir)
-    {
-        transform.position = pos;
-        m_dir = dir;
-        m_rigidbody.AddForce(m_dir * m_speed, ForceMode2D.Impulse);
-        //Invoke("RemoveBullet", m_duratuion);    //시간 기준으로 bullet 삭제
-    }
-    void RemoveBullet()
-    {
-        Destroy(gameObject);
     }
 }
