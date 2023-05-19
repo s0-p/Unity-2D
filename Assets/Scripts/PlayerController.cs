@@ -6,12 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     Animator m_animator;
-    [SerializeField]
-    float m_speed = 10f;
-    [SerializeField]
-    float m_jumpPower = 10f;
     Rigidbody2D m_rigidbody;
     BoxCollider2D m_boxCollider;
+    [SerializeField]
+    float m_speed = 10f;
     Vector3 m_dir;
 
     [SerializeField]
@@ -19,8 +17,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Transform m_firePos;
 
+    [SerializeField]
+    float m_jumpPower = 10f;
+    int m_jumpCount = 0;
     bool IsGrounded { get; set; }
-    //bool m_IsFalling;
+    bool m_IsFalling;
 
 #if UNITY_EDITOR
     public int HP { get; set; }
@@ -36,7 +37,6 @@ public class PlayerController : MonoBehaviour
         HP = 100;
         Debug.Log("플레이어 현재 체력 : " + HP);
     }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -48,13 +48,11 @@ public class PlayerController : MonoBehaviour
     {
         m_rigidbody.velocity += (Vector2)m_dir * m_speed * Time.deltaTime;
     }
-
     // Update is called once per frame
     void Update()
     {
         ActionControl();
     }
-    
     void ActionControl()
     {
         //if (Input.GetKeyDown(KeyCode.C))
@@ -68,26 +66,26 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))    //Idle
         {
-            m_animator.SetBool("IsMove", false);
             m_dir = Vector3.zero;
+            m_animator.SetBool("IsMove", false);
         }
-        if (Input.GetKey(KeyCode.LeftArrow))    //left walk
+        if (Input.GetKey(KeyCode.LeftArrow))    //Left walk
         {
             //gameObject.transform.position += Vector3.left * 0.01f;
             m_dir = Vector3.left;
-            m_animator.SetBool("IsMove", true);
             //m_spriteRenderer.flipX = false;
             //gameObject.transform.rotation = Quaternion.identity; //Quaternion.Euler(0f, 0f, 0f);
             transform.eulerAngles = Vector3.zero;
+            m_animator.SetBool("IsMove", true);
         }
-        if (Input.GetKey(KeyCode.RightArrow))      //right walk
+        if (Input.GetKey(KeyCode.RightArrow))      //Right walk
         {
             //gameObject.transform.position += Vector3.right * 0.01f;
             m_dir = Vector3.right;
-            m_animator.SetBool("IsMove", true);
             //m_spriteRenderer.flipX = true;
             //gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             transform.eulerAngles = new Vector3(0f, 180f, 0);
+            m_animator.SetBool("IsMove", true);
         }
         //var stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
         //if (!stateInfo.IsName("Fire"))  //공격중이 아닐 경우 이동
@@ -97,29 +95,30 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftControl))    //Fire
         {
-            m_animator.SetBool("IsFire", true);
             //CreateBullet();
+            m_animator.SetBool("IsFire", true);
         }
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             m_animator.SetBool("IsFire", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))    //JumpUp
+        if (Input.GetKeyDown(KeyCode.Space) && m_jumpCount < 2)    //JumpUp
         {
-            m_animator.SetInteger("JumpState", 1);
+            m_rigidbody.velocity = new Vector2(m_rigidbody.velocity.x, 0f);
             m_rigidbody.AddForce(Vector2.up * m_jumpPower, ForceMode2D.Impulse);
+            m_jumpCount++;
+            m_animator.SetInteger("JumpState", 1);
         }
         if (!IsGrounded)    //JumpDown
         {
             if (m_rigidbody.velocity.y < 0)
             {
-                m_animator.SetInteger("JumpState", 2);
-                //if (!m_IsFalling)
-                //{
-                //    //m_IsFalling = true;
-                //    m_animator.SetInteger("JumpState", 2);
-                //}
+                if (!m_IsFalling)
+                {
+                    m_IsFalling = true;
+                    m_animator.SetInteger("JumpState", 2);
+                }
             }
         }
     }
@@ -134,12 +133,12 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Background"))
         {
-            //m_IsFalling = false;
+            m_IsFalling = false;
             IsGrounded = true;
+            m_jumpCount = 0;
             m_animator.SetInteger("JumpState", 0);
         }
     }
-
     void CreateBullet()
     {
         var obj = Instantiate(m_bulletPrefab);
