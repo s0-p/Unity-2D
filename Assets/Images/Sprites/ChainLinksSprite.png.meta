@@ -113,34 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ChainLinksSprite_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 89
-        height: 123
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 02305410000000000800000000000000
-      internalID: 21300000
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: ChainLinksSprite_1
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 2
         width: 59
-        height: 123
+        height: 120
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,10 +137,10 @@ TextureImporter:
       name: ChainLinksSprite_2
       rect:
         serializedVersion: 2
-        x: 59
-        y: 0
-        width: 31
-        height: 123
+        x: 62
+        y: 4
+        width: 28
+        height: 117
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,7 +157,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7df12138500c3774885b07c0dc186ad3
     internalID: 0
     vertices: []
     indices: 
