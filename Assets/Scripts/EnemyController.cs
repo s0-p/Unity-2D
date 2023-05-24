@@ -6,7 +6,24 @@ public class EnemyController : MonoBehaviour
 {
     public int Hp { get; set; }
     Animator m_animator;
-    
+
+    private void Awake()
+    {
+        m_animator = GetComponent<Animator>();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Hp = 5;
+    }
+
+    // Update is called once per frame
+    //void Update()
+    //{
+
+    //}
+
     public void SetDamage(int dmg)
     {
         m_animator.Play("Hit", 0, 0f);
@@ -16,16 +33,4 @@ public class EnemyController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        Hp = 5;
-        m_animator = GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
 }
