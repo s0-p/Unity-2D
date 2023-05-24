@@ -43,10 +43,10 @@ public class ProjecttileController : MonoBehaviour
         m_line[1].endWidth = 0.35f;
     }
     // Start is called before the first frame update
-    void Start()
-    {
+    //void Start()
+    //{
         
-    }
+    //}
 
     // Update is called once per frame
     void Update()

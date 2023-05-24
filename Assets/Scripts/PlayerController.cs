@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
     Animator m_animator;
     Rigidbody2D m_rigidbody;
-    BoxCollider2D m_boxCollider;
     [SerializeField]
     float m_speed = 10f;
     Vector3 m_dir;
@@ -23,13 +21,15 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded { get; set; }
     bool m_IsFalling;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
     public int HP { get; set; }
-#else
-    public int HP;
-#endif
+//#else
+//    public int HP;
+//#endif
     private void Awake()
     {
+        m_animator = GetComponent<Animator>();
+        m_rigidbody = GetComponent<Rigidbody2D>();
         Debug.Log("플레이어 인스턴스 완료!");
     }
     private void OnEnable()
@@ -38,12 +38,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("플레이어 현재 체력 : " + HP);
     }
     // Start is called before the first frame update
-    void Start()
-    {
-        m_animator = GetComponent<Animator>();
-        m_rigidbody = GetComponent<Rigidbody2D>();
-        m_boxCollider = GetComponent<BoxCollider2D>();
-    }
+    //void Start()
+    //{
+        
+    //}
     void FixedUpdate()
     {
         m_rigidbody.velocity += (Vector2)m_dir * m_speed * Time.deltaTime;
