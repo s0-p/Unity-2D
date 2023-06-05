@@ -38,7 +38,6 @@ public class MoveTween : MonoBehaviour
             transform.position = result;
         }
     }
-
     public void Play()
     {
         m_isStart = true;

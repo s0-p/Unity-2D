@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+//#if UNITY_EDITOR
+    public int HP { get; set; }
+//#else
+//    public int HP;
+//#endif
+    [SerializeField]
+    Inventory m_inventory;
+    [SerializeField]
+    UISprite m_slotCursor;
+
     Animator m_animator;
     Rigidbody2D m_rigidbody;
     [SerializeField]
@@ -21,11 +31,8 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded { get; set; }
     bool m_IsFalling;
 
-//#if UNITY_EDITOR
-    public int HP { get; set; }
-//#else
-//    public int HP;
-//#endif
+    
+
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
@@ -118,6 +125,20 @@ public class PlayerController : MonoBehaviour
                     m_animator.SetInteger("JumpState", 2);
                 }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (m_inventory.gameObject.activeSelf)
+            {
+                m_slotCursor.enabled = false;
+                m_inventory.gameObject.SetActive(false);
+            }
+            else
+            {
+                m_inventory.gameObject.SetActive(true);
+            }
+
         }
     }
     void OnTriggerExit2D(Collider2D collision)      //JumpUp
