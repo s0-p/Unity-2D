@@ -31,8 +31,6 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded { get; set; }
     bool m_IsFalling;
 
-    
-
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
@@ -126,7 +124,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LoadSceneManager.Instance.LoadSceneAsync(Scene.Title);
+        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             if (m_inventory.gameObject.activeSelf)
