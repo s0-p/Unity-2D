@@ -9,7 +9,7 @@ public enum Scene
     Lobby,
     Game
 }
-public class LoadSceneManager : MonoBehaviour
+public class LoadSceneManager : SingletonDontDestroy<LoadSceneManager>
 {
     AsyncOperation m_loadingInfo;
     [SerializeField]
@@ -19,26 +19,27 @@ public class LoadSceneManager : MonoBehaviour
     [SerializeField]
     UILabel m_labelProgress;
 
-    static LoadSceneManager m_instance;
-    public static LoadSceneManager Instance { get { return m_instance; } }
+    //static LoadSceneManager m_instance;
+    //public static LoadSceneManager Instance { get { return m_instance; } }
 
     Scene m_scene;  //현재 scene
     Scene m_loadingScene = Scene.None;
 
-    void Awake()
-    {
-        if (m_instance == null)     //처음 instance
-        {
-            m_instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    //void Awake()
+    //{
+    //    if (m_instance == null)     //처음 instance
+    //    {
+    //        m_instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
+
     // Start is called before the first frame update
-    void Start()
+    protected override void OnStart()
     {
         m_loadingObj.SetActive(false);
     }
