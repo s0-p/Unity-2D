@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 public enum Scene
 {
     None = -1,
@@ -62,6 +63,45 @@ public class LoadSceneManager : SingletonDontDestroy<LoadSceneManager>
             {
                 m_loadingBar.value = m_loadingInfo.progress;
                 m_labelProgress.text = (int)(m_loadingInfo.progress * 100) + "%";
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (PopupManager.Instance.IsOpen)
+            {
+                PopupManager.Instance.ClosePopup();
+            }
+            else
+            {
+                switch (m_scene)
+                {
+                    case Scene.Title:
+                        PopupManager.Instance.Open_PopupOkCancel("안내", "게임을 종료하시겠습니까?", () =>
+                            {
+#if UNITY_EDITOR
+                                EditorApplication.isPlaying = false;
+#else
+                                Application.Quit();
+#endif
+                            }, null, "예", "아니오");
+
+                        break;
+                    case Scene.Lobby:
+                        PopupManager.Instance.Open_PopupOkCancel("안내", "타이틀 화면으로 돌아가시겠습니까?", () =>
+                        {
+                            LoadSceneAsync(Scene.Title);
+                            PopupManager.Instance.ClosePopup();
+                        }, null, "예", "아니오");
+                        break;
+                    case Scene.Game:
+                        PopupManager.Instance.Open_PopupOkCancel("안내", "게임을 종료하고 로비로 돌아가시겠습니까?\r\n(저장하지 않은 내용은 모두 잃게 됩니다.)", () => 
+                        {
+                            LoadSceneAsync(Scene.Lobby);
+                            PopupManager.Instance.ClosePopup();
+                        }, null, "예", "아니오");
+                        break;
+                }
             }
         }
     }

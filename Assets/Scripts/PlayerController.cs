@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             LoadSceneManager.Instance.LoadSceneAsync(Scene.Title);
         }
