@@ -54,9 +54,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ActionControl();
+        ActionControll();
     }
-    void ActionControl()
+    void ActionControll()
     {
         //if (Input.GetKeyDown(KeyCode.C))
         //{
